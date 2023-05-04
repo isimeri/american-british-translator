@@ -1,0 +1,6 @@
+.vscode/*
+.env
+sample.env
+test.js
+.glitch-assets
+node_modules/
