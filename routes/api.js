@@ -1,13 +1,18 @@
 'use strict';
 
+const express = require('express');
+const router = express.Router()
 const Translator = require('../components/translator.js');
+const translate = new Translator;
 
-module.exports = function (app) {
-  
-  const translator = new Translator();
 
-  app.route('/api/translate')
-    .post((req, res) => {
-      
-    });
-};
+router.post('/', (req, res) => {
+    const rawText = req.body.text;
+    const locale = req.body.locale;
+
+    const output = translate.translateBA(rawText);
+
+    res.json({translation: output, error: ''});
+});
+
+module.exports = router;
