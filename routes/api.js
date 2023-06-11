@@ -9,8 +9,12 @@ const translate = new Translator;
 router.post('/', (req, res) => {
     const rawText = req.body.text;
     const locale = req.body.locale;
-
-    const output = translate.translateBA(rawText);
+    let output;
+    if(locale === 'american-to-british'){
+        output = translate.translateAB(rawText);
+    } else {
+        output = translate.translateBA(rawText);
+    }
 
     res.json({translation: output, error: ''});
 });

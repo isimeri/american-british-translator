@@ -5,23 +5,8 @@ const britishOnly = require('./british-only.js')
 
 class Translator {
 
-    brOnly(word){
-        return britishOnly[word];
-    }
-    amOnly(word){
-        return americanOnly[word];
-    }
-    amToBrSpelling(word){
-        return americanToBritishSpelling[word]
-    }
-    brToAmSpelling(word){
-        return Object.keys(americanToBritishSpelling).find(key => americanToBritishSpelling[key] === word);
-    }
-    amToBrTitles(word){
-        return americanToBritishTitles(word);
-    }
-    brToAmTitles(word){
-        return Object.keys(americanToBritishTitles).find(key => americanToBritishTitles[key] === word);
+    capitalize(word){
+        return word.charAt(0).toUpperCase() + word.slice(1)
     }
 
     translateBA(text){
@@ -29,32 +14,41 @@ class Translator {
         const brTitles = Object.values(americanToBritishTitles);
         const brSpelling = Object.values(americanToBritishSpelling);
 
-        // console.log(brSpelling)
 
         let result = text;
         const flags = 'gi';
 
         brOnlyArr.forEach(word => {
-            if(result.includes(word)){
+            if(result.includes(word.toLowerCase())){
                 const regex = new RegExp(`${word}`, flags);
-                result = result.replace(regex, britishOnly[word]);
-                console.log(result);
+                result = result.replace(regex, britishOnly[word.toLowerCase()]);
+                // console.log(result);
+            }
+            if(result.includes(this.capitalize(word))){
+                const regex = new RegExp(`${word}`, flags);
+                const replacement = this.capitalize(britishOnly[word.toLowerCase()])
+                result = result.replace(regex, replacement);
             }
         });
         brTitles.forEach(word => {
-            if(result.includes(word)){
+            if(result.includes(word) || result.includes(this.capitalize(word))){
                 const regex = new RegExp(`${word}`, flags);
-                const replacement = Object.keys(americanToBritishTitles).find(key => americanToBritishTitles[key] === word);
-                result = result.replace(regex, replacement);
-                console.log(result);
+                const replacement = Object.keys(americanToBritishTitles).find(key => americanToBritishTitles[key] === word.toLowerCase());
+                result = result.replace(regex, this.capitalize(replacement));
+                // console.log(result);
             }
         });
         brSpelling.forEach(word => {
-            if(result.includes(word)){
+            if(result.includes(word.toLowerCase())){
                 const regex = new RegExp(`${word}`, flags);
-                const replacement = Object.keys(americanToBritishSpelling).find(key => americanToBritishSpelling[key] === word);
+                const replacement = Object.keys(americanToBritishSpelling).find(key => americanToBritishSpelling[key] === word.toLowerCase());
                 result = result.replace(regex, replacement);
-                console.log(result);
+                // console.log(result);
+            }
+            if(result.includes(this.capitalize(word))){
+                const regex = new RegExp(`${word}`, flags);
+                const replacement = Object.keys(americanToBritishSpelling).find(key => americanToBritishSpelling[key] === word.toLowerCase());
+                result = result.replace(regex, this.capitalize(replacement));
             }
         })
         return result;
@@ -65,10 +59,39 @@ class Translator {
         const amTitles = Object.keys(americanToBritishTitles);
         const amSpelling = Object.keys(americanToBritishSpelling);
 
-        result = text;
-        flags = 'gi'
+        let result = text;
+        const flags = 'gi';
 
-        //continua aici
+        amOnlyArr.forEach(word => {
+            if(result.includes(word)){
+                const regex = new RegExp(`${word}`, flags);
+                result = result.replace(regex, americanOnly[word.toLowerCase()]);
+            }
+            if(result.includes(this.capitalize(word))){
+                const regex = new RegExp(`${word}`, flags);
+                const replacement = this.capitalize(americanOnly[word.toLowerCase()]);
+                result = result.replace(regex, replacement);
+            }
+        });
+        amTitles.forEach(word => {
+            if(result.includes(word) || result.includes(this.capitalize(word))){
+                const regex = new RegExp(`${word}`, flags);
+                const replacement = this.capitalize(americanToBritishTitles[word.toLowerCase()]);
+                result = result.replace(regex, replacement);
+            }
+        });
+        amSpelling.forEach(word => {
+            if(result.includes(word)){
+                const regex = new RegExp(`${word}`, flags);
+                const replacement = americanToBritishSpelling[word.toLowerCase()];
+                result = result.replace(regex, replacement);
+            }
+            if(result.includes(this.capitalize(word))){
+                const regex = new RegExp(`${word}`, flags);
+                const replacement = this.capitalize(americanToBritishSpelling[word.toLowerCase()]);
+                result = result.replace(regex, replacement);
+            }
+        })
 
         return result;
     }
