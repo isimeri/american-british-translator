@@ -16,6 +16,10 @@ router.post('/', (req, res) => {
         output = translate.translateBA(rawText);
     }
 
+    if(output === rawText){
+        output = "Everything looks good to me!";
+    }
+
     res.json({translation: output, error: ''});
 });
 
