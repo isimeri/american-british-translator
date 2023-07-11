@@ -63,12 +63,13 @@ class Translator {
             
             }
         });
-        return result;
+        return this.capitalize(result);
     }
 
     translateAB(text){
         const amOnlyArr = Object.keys(americanOnly);
         const amTitles = Object.keys(americanToBritishTitles);
+        const brTitles = Object.values(americanToBritishTitles);
         const amSpelling = Object.keys(americanToBritishSpelling);
 
         let result = text;
@@ -97,14 +98,16 @@ class Translator {
             
             }
         });
-        amTitles.forEach(word => {
+        brTitles.forEach(word => {
 
-            const regex = new RegExp(`(?<![-'])\\b${word}\\b(?![-'])`, flags);
+            const regex = new RegExp(`(?<![-'])\\b${word}\\.(?![-'])`, flags);
             let replacement;
+            // console.log('prof.'.match(regex));
+            // console.log(regex)
 
             if(result.match(regex)){
-                
-                replacement = this.capitalize(americanToBritishTitles[word]);
+                // console.log('aicia');
+                replacement = this.capitalize(americanToBritishTitles[`${word}.`]);
                 result = result.replace(regex, `<span class="highlight">${replacement}</span>`);
             
             }
