@@ -10,6 +10,10 @@ router.post('/', (req, res) => {
     const rawText = req.body.text;
     const locale = req.body.locale;
     let output;
+
+    if(locale === undefined || rawText === undefined){
+        return res.json({ error: 'Required field(s) missing' });
+    }
     
     if(locale === 'american-to-british'){
         output = translate.translateAB(rawText);
@@ -26,7 +30,7 @@ router.post('/', (req, res) => {
         output = "Everything looks good to me!";
     }
 
-    res.json({translation: output, error: ''});
+    res.json({text: rawText, translation: output, error: ''});
 });
 
 module.exports = router;
